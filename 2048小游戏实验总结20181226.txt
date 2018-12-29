@@ -1,0 +1,155 @@
+2048小游戏实验总结
+=========================================
+1、库
+curses库
+------------------------------
+库的文档： https://docs.python.org/3/howto/curses.html
+
+curses.wrapper(main)
+本实验调用了curses和wrapper()方法，
+从源码可知，curses.wrapper()作了以下操作：
+initscr()--> noecho()--> cbreak()--> stdscr.keypad(1)--> start_color()--> return func(stdscr, *args, **kwds)
+初始化--> 关闭自动回显--> 打开对按键立即反应--> enable return special key value--> 设置使用颜色--> 调用函数
+
+initscr.getch()
+使用getch()方法，从键盘获取输入字符
+
+
+random库
+-------------------------------
+randrange()方法：
+randrange(100)随机生成一个小于100的数字
+
+choice()
+(i,j) = choice([(i,j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
+从给定的list中随机返回一个元素
+
+
+
+collections
+-------------------------------
+defaultdict
+
+t = defaultdict(int)
+print(t[123])		# 0
+
+def Const():
+	return 23
+	
+t2 = defaultdict(Const)
+print(t2['xiao'])	# 23
+t2['xiao'] = 'Win'
+print(t2['xiao'])	# Win
+
+这种方式可以创建一个字典对象，并为不存在的key自动给出一个默认的value。
+这个默认value由defaultcdict()传入的参数决定，这个参数可以是一个类型或者函数
+
+
+2、字符的处理
+ord()
+-----------------------------
+ord(c) for c in 'WASDRQwasdrq'
+将字符转化为ASCII值
+
+format()
+-----------------------------
+''.join('|{: ^5} '.format(num)
+ ^是居中显式，<是左对齐，>是右对齐； 上面表示居中显示，长度为5，用空格填充
+  比如：'{:0>5} '.format(8)为右对齐；5表示长度为5，用0填弃：  ’00800‘
+  冒号后面有一个空格，意思是空格填充；
+
+
+3、list列表处理
+zip()
+-----------------------------
+用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元组组成的列表。
+>>>a = [1,2,3]
+>>>b = [4,5,6]
+>>>c = [4,5,6,7,8]
+>>> zipped = zip(a,b)     # 打包为元组的列表
+[(1, 4), (2, 5), (3, 6)]
+>>> zip(a,c)              # 元素个数与最短的列表一致
+[(1, 4), (2, 5), (3, 6)]
+>>> zip(*zipped)          # 与 zip 相反，*zipped 可理解为解压，返回二维矩阵式
+[(1, 2, 3), (4, 5, 6)]
+
+列表切片
+----------------------------
+https://blog.csdn.net/mingyuli/article/details/81604795
+参考：http://www.cnblogs.com/mxh1099/p/5804064.html
+
+a='python'
+b=a[::-1]
+print(b) #nohtyp
+c=a[::-2]
+print(c) #nhy
+#从后往前数的话，最后一个位置为-1
+d=a[:-1]  #从位置0到位置-1之前的数
+print(d)  #pytho
+e=a[:-2]  #从位置0到位置-2之前的数
+print(e)  #pyth
+
+用法说明：
+
+b = a[i:j]   表示复制a[i]到a[j-1]，以生成新的list对象
+a = [0,1,2,3,4,5,6,7,8,9]
+b = a[1:3]   # [1,2]
+
+当i缺省时，默认为0，即 a[:3]相当于 a[0:3]
+当j缺省时，默认为len(alist), 即a[1:]相当于a[1:10]
+当i,j都缺省时，a[:]就相当于完整复制一份a
+
+b = a[i:j:s]表示：i,j与上面的一样，但s表示步进，缺省为1.
+所以a[i:j:1]相当于a[i:j]
+
+当s<0时，i缺省时，默认为-1. j缺省时，默认为-len(a)-1
+所以a[::-1]相当于 a[-1:-len(a)-1:-1]，也就是从最后一个元素到第一个元素复制一遍，即倒序。
+
+
+
+4、dict字典处理
+dict() 
+-----------------------------
+函数用于创建一个字典。
+>>>dict()                        # 创建空字典
+{}
+>>> dict(a='a', b='b', t='t')     # 传入关键字
+{'a': 'a', 'b': 'b', 't': 't'}
+>>> dict(zip(['one', 'two', 'three'], [1, 2, 3]))   # 映射函数方式来构造字典
+{'three': 3, 'two': 2, 'one': 1} 
+>>> dict([('one', 1), ('two', 2), ('three', 3)])    # 可迭代对象方式来构造字典
+{'three': 3, 'two': 2, 'one': 1}
+
+
+
+5、lambda关键字
+-----------------------------
+lambda x: x+1 	
+等同于以下函数:
+	def func(x):
+		return (x+1)
+
+
+
+6、状态机
+-----------------------------
+state_actions = {
+        'Init': init,
+        'Win': lambda: not_game('Win'),
+        'Gameover': lambda: not_game('Gameover'),
+        'Game': game
+    }
+
+    # 设置终结状态最大数值为 32
+    game_field = GameField(win=64)
+
+    state = 'Init'
+
+    while state != 'Exit':
+        state = state_actions[state]()
+		
+		
+		
+		
+		
+		
